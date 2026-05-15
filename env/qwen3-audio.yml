@@ -1,0 +1,24 @@
+name: qwen3-audio
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - ffmpeg
+  - pip:
+      # Qwen3-Audio 统一环境：同时服务 Qwen3-ASR 和 Qwen3-TTS。
+      # 注意：qwen-asr 与 qwen-tts 对 transformers 小版本声明不同；
+      # 当前实测 transformers 4.57.6 下 ASR/TTS 包均可导入，Qwen3-TTS 可加载模型。
+      - torch==2.10.0
+      - torchaudio==2.10.0
+      - transformers==4.57.6
+      - qwen-asr==0.0.6
+      - qwen-tts==0.1.1
+      - qwen-omni-utils==0.0.9
+      - accelerate==1.12.0
+      - soundfile==0.13.1
+      - librosa==0.11.0
+      - modelscope==1.36.3
+      - requests
+      - python-dotenv
+      - PyYAML

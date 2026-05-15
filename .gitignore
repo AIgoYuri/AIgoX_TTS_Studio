@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.DS_Store
+
+# Generated audio and temporary files
+output/
+temp/
+*.wav
+*.mp3
+*.mp4
+*.flac
+
+# Local conda environments
+env/tts-omni/
+env/tts-voxcpm2/
+env/qwen3-audio/
+
+# Model weights are too large for git.
+models/*
+!models/download_qwen_tts_base.py
