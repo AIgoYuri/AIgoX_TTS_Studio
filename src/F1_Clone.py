@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from api import DEFAULT_TEXT, clone_tts, read_text, short_model_name, timestamp_name
+from api import DEFAULT_TEXT, MODELS, clone_tts, read_text, short_model_name, timestamp_name
 
 
 INFO = {"id": "F1_Clone", "name": "声音克隆"}
@@ -18,11 +18,11 @@ INFO = {"id": "F1_Clone", "name": "声音克隆"}
 # 1. 默认模型名：这里填模型名，不填模型目录。
 DEFAULT_CLONE_MODEL = "qwen3_tts_1_7b_base"
 # DEFAULT_CLONE_MODEL = "qwen3_tts_0_6b_base"
-#
-# 2. 模型路径：真正生效位置在 src/api.py 的 MODELS。
-#    相对路径：models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
-#    绝对路径：/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
-#
+
+# 2. 默认模型路径：默认用相对路径；需要绝对路径时，注释上一行，取消下一行注释。
+DEFAULT_CLONE_MODEL_PATH = "models/Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+# DEFAULT_CLONE_MODEL_PATH = "/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+
 # 3. 输入统一放 input，输出统一放 output。
 DEFAULT_CLONE_REF_AUDIO = "input/clone_1/ref.wav"
 DEFAULT_CLONE_TEXT_FILE = "input/clone_1/text.txt"
@@ -70,6 +70,8 @@ def run(payload: dict[str, Any]) -> dict[str, Any]:
     """接收网页或命令行参数，调用 api.clone_tts 生成音频。"""
     # 模型名来自页面/命令行；没传就用顶部 DEFAULT_CLONE_MODEL。
     model = payload.get("model") or DEFAULT_CLONE_MODEL
+    if DEFAULT_CLONE_MODEL_PATH and model == DEFAULT_CLONE_MODEL and model in MODELS:
+        MODELS[model]["path"] = DEFAULT_CLONE_MODEL_PATH
 
     # 输出路径没传就用顶部 DEFAULT_CLONE_OUTPUT；仍为空则自动生成。
     output = payload.get("output") or DEFAULT_CLONE_OUTPUT or _default_output("clone_1", model)
