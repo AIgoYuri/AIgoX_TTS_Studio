@@ -25,7 +25,8 @@ DEFAULT_CLONE_MODEL_PATH = "models/Qwen/Qwen3-TTS-12Hz-1.7B-Base"
 
 # 3. 输入统一放 input，输出统一放 output。
 DEFAULT_CLONE_REF_AUDIO = "input/clone_1/ref.wav"
-DEFAULT_CLONE_TEXT_FILE = "input/clone_1/text.txt"
+DEFAULT_CLONE_TEXT_FILE = ""
+# DEFAULT_CLONE_TEXT_FILE = "input/clone_1/text.txt"
 DEFAULT_CLONE_OUTPUT = ""
 # DEFAULT_CLONE_OUTPUT = "output/clone_1/demo.mp3"
 #
@@ -42,7 +43,7 @@ DEFAULT_CLONE_MAX_CHARS = 80
 # 直接生成：
 #   python src/F1_Clone.py --text "你好，这是声音克隆测试。"
 #
-# 读取文本文件生成：
+# 读取文本文件生成，适合长文案：
 #   python src/F1_Clone.py --text-file input/clone_1/text.txt
 #
 # 完整参数命令：
@@ -89,7 +90,7 @@ def run(payload: dict[str, Any]) -> dict[str, Any]:
     ref_text = payload.get("ref_text") or DEFAULT_CLONE_REF_TEXT
 
     # 文本框有内容就用 text；文本框为空才读取 text_file。
-    text_file = payload.get("text_file")
+    text_file = payload.get("text_file") or DEFAULT_CLONE_TEXT_FILE
     text = payload.get("text") or (read_text(text_file) if text_file else DEFAULT_TEXT)
 
     # 这里只整理参数；真正加载模型和生成音频在 api.clone_tts。
