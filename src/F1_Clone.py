@@ -12,35 +12,24 @@ from api import DEFAULT_TEXT, clone_tts, read_text, short_model_name, timestamp_
 INFO = {"id": "F1_Clone", "name": "声音克隆"}
 
 # =============================================================================
-# F1 声音克隆模块：先改这里的默认路径
+# F1 声音克隆模块：常改内容在这里
 # =============================================================================
 #
 # 1. 默认模型名：这里填模型名，不填模型目录。
-#    模型目录在 src/api.py 的 MODELS 里配置。
 DEFAULT_CLONE_MODEL = "qwen3_tts_1_7b_base"
 # DEFAULT_CLONE_MODEL = "qwen3_tts_0_6b_base"
 #
-# 2. 模型目录参考：如果你要改模型真实路径，去 src/api.py 改 MODELS。
-#    相对路径：
-#    models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
-#    models/Qwen/Qwen3-TTS-12Hz-0.6B-Base
+# 2. 模型路径：真正生效位置在 src/api.py 的 MODELS。
+#    相对路径：models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
+#    绝对路径：/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
 #
-#    绝对路径示例，默认注释掉，别人部署时可以复制到 src/api.py：
-#    /workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-1.7B-Base
-#    /workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-0.6B-Base
-#
-# 3. 默认输入路径：目标声音音频和要朗读的文本。
+# 3. 输入统一放 input，输出统一放 output。
 DEFAULT_CLONE_REF_AUDIO = "input/clone_1/ref.wav"
-# DEFAULT_CLONE_REF_AUDIO = "/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/input/clone_1/ref.wav"
 DEFAULT_CLONE_TEXT_FILE = "input/clone_1/text.txt"
-# DEFAULT_CLONE_TEXT_FILE = "/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/input/clone_1/text.txt"
-#
-# 4. 默认输出路径：留空会自动生成 output/clone_1/qwen_时间.mp3。
 DEFAULT_CLONE_OUTPUT = ""
 # DEFAULT_CLONE_OUTPUT = "output/clone_1/demo.mp3"
-# DEFAULT_CLONE_OUTPUT = "/workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/output/clone_1/demo.mp3"
 #
-# 5. 默认参考文本：建议填写 ref.wav 对应文字，克隆更稳。
+# 4. 参考文本是 ref.wav 里说的话，建议填写，克隆更稳。
 DEFAULT_CLONE_REF_TEXT = ""
 DEFAULT_CLONE_LANGUAGE = "Chinese"
 DEFAULT_CLONE_MAX_CHARS = 80
@@ -55,6 +44,26 @@ DEFAULT_CLONE_MAX_CHARS = 80
 #
 # 读取文本文件生成：
 #   python src/F1_Clone.py --text-file input/clone_1/text.txt
+#
+# 完整参数命令：
+#   python src/F1_Clone.py \
+#     --web off \
+#     --text-file input/clone_1/text.txt \
+#     --ref-audio input/clone_1/ref.wav \
+#     --ref-text "参考音频对应文本" \
+#     --model qwen3_tts_1_7b_base \
+#     --language Chinese \
+#     --output output/clone_1/demo.mp3 \
+#     --max-chars 80 \
+#     --seed 1234 \
+#     --temperature 0.9 \
+#     --top-p 1.0 \
+#     --top-k 20 \
+#     --repetition-penalty 1.1 \
+#     --max-new-tokens "" \
+#     --do-sample true \
+#     --x-vector-only-mode false \
+#     --non-streaming-mode false
 
 
 def run(payload: dict[str, Any]) -> dict[str, Any]:
@@ -112,23 +121,46 @@ def _as_bool(value: Any) -> bool:
     return str(value).lower() in {"1", "true", "yes", "on"}
 
 
+def _optional_str(value: Any) -> str | None:
+    """把命令行空字符串转成 None，避免传给模型。"""
+    if value in (None, ""):
+        return None
+    return str(value)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="F1 声音克隆：可独立运行，也可启动网页",
         epilog=(
             "Example:\n"
             "  python src/F1_Clone.py --web on\n"
-            "  python src/F1_Clone.py --text \"你好\" --ref-audio input/clone_1/ref.wav --ref-text \"参考音频文本\"\n"
-            "  python src/F1_Clone.py --text-file input/clone_1/text.txt --ref-audio input/clone_1/ref.wav --output output/clone_1/demo.mp3\n\n"
+            "  python src/F1_Clone.py --text \"你好\" --ref-audio input/clone_1/ref.wav --ref-text \"参考音频文本\"\n\n"
+            "Full command:\n"
+            "  python src/F1_Clone.py \\\n"
+            "    --web off \\\n"
+            "    --text-file input/clone_1/text.txt \\\n"
+            "    --ref-audio input/clone_1/ref.wav \\\n"
+            "    --ref-text \"参考音频对应文本\" \\\n"
+            "    --model qwen3_tts_1_7b_base \\\n"
+            "    --language Chinese \\\n"
+            "    --output output/clone_1/demo.mp3 \\\n"
+            "    --max-chars 80 \\\n"
+            "    --seed 1234 \\\n"
+            "    --temperature 0.9 \\\n"
+            "    --top-p 1.0 \\\n"
+            "    --top-k 20 \\\n"
+            "    --repetition-penalty 1.1 \\\n"
+            "    --max-new-tokens \"\" \\\n"
+            "    --do-sample true \\\n"
+            "    --x-vector-only-mode false \\\n"
+            "    --non-streaming-mode false\n\n"
             "Model names:\n"
             "  qwen3_tts_1_7b_base\n"
             "  qwen3_tts_0_6b_base\n\n"
-            "Model paths are configured in src/api.py MODELS:\n"
+            "Model path examples for src/api.py MODELS:\n"
             "  models/Qwen/Qwen3-TTS-12Hz-1.7B-Base\n"
-            "  models/Qwen/Qwen3-TTS-12Hz-0.6B-Base\n\n"
-            "Reference audio path examples:\n"
-            "  input/clone_1/ref.wav\n"
-            "  /workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/input/clone_1/ref.wav"
+            "  /workspace/projects/Project/prometheus/TMP/OmniAudio/AIgoX_TTS_Studio/models/Qwen/Qwen3-TTS-12Hz-1.7B-Base\n\n"
+            "Audio input stays under input/. Audio output stays under output/."
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )
@@ -142,6 +174,14 @@ def main() -> None:
     parser.add_argument("--output", default=DEFAULT_CLONE_OUTPUT, help="输出音频路径；留空则自动生成到 output/clone_1/。")
     parser.add_argument("--max-chars", type=int, default=DEFAULT_CLONE_MAX_CHARS, help="长文本分段长度，默认 80。")
     parser.add_argument("--seed", type=int, default=None, help="随机种子；留空表示随机。")
+    parser.add_argument("--temperature", type=float, default=0.9, help="随机性，越高变化越大，默认 0.9。")
+    parser.add_argument("--top-p", type=float, default=1.0, help="核采样范围，默认 1.0。")
+    parser.add_argument("--top-k", type=int, default=20, help="每步候选数量，默认 20。")
+    parser.add_argument("--repetition-penalty", type=float, default=1.1, help="重复惩罚，默认 1.1。")
+    parser.add_argument("--max-new-tokens", default="", help="最大生成 token，通常留空。")
+    parser.add_argument("--do-sample", default="true", help="是否采样，true 或 false。")
+    parser.add_argument("--x-vector-only-mode", default="false", help="是否只用声纹特征，默认 false。")
+    parser.add_argument("--non-streaming-mode", default="false", help="Qwen 内部生成模式，默认 false。")
     args = parser.parse_args()
     if args.web == "on":
         # F1 独立打开页面时，复用 run.py 里的网页实现。
@@ -165,6 +205,14 @@ def main() -> None:
         "output": args.output,
         "max_chars": args.max_chars,
         "seed": args.seed,
+        "temperature": args.temperature,
+        "top_p": args.top_p,
+        "top_k": args.top_k,
+        "repetition_penalty": args.repetition_penalty,
+        "max_new_tokens": _optional_str(args.max_new_tokens),
+        "do_sample": args.do_sample,
+        "x_vector_only_mode": args.x_vector_only_mode,
+        "non_streaming_mode": args.non_streaming_mode,
     }), ensure_ascii=False, indent=2))
 
 
