@@ -68,9 +68,6 @@ def page() -> str:
     h2 {{ margin:0; font-size:18px; }}
     .module-desc {{ margin-top:6px; color:var(--muted); font-size:13px; }}
     .badge {{ padding:7px 10px; border:1px solid #315264; border-radius:999px; color:#9ee8dd; background:#0b2830; font-size:12px; white-space:nowrap; }}
-    .flow {{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }}
-    .flow div {{ border:1px solid var(--line); background:#0c141e; border-radius:10px; padding:10px 12px; color:#c8d3df; font-size:13px; }}
-    .flow b {{ display:block; color:var(--ink); font-size:12px; margin-bottom:3px; }}
     label {{ display:block; margin:0 0 7px; font-weight:800; font-size:12px; color:#cbd6e2; }}
     textarea,input,select {{
       width:100%; height:42px; border:1px solid #2a384a; border-radius:9px; padding:10px 11px;
@@ -98,7 +95,7 @@ def page() -> str:
     .status-wrap {{ margin-top:14px; border:1px solid var(--line); border-radius:12px; background:#090f16; overflow:hidden; }}
     .status-title {{ padding:10px 12px; border-bottom:1px solid var(--line); color:#cbd6e2; font-weight:900; font-size:12px; }}
     pre {{ margin:0; white-space:pre-wrap; min-height:126px; background:#090f16; color:#b8dcff; padding:12px; overflow:auto; font-size:12px; }}
-    @media(max-width:980px) {{ .top {{ align-items:flex-start; flex-direction:column; }} .modules,.flow {{ grid-template-columns:1fr; }} .span-4,.span-6,.span-12 {{ grid-column:span 12; }} .param-grid {{ grid-template-columns:1fr; }} }}
+    @media(max-width:980px) {{ .top {{ align-items:flex-start; flex-direction:column; }} .modules {{ grid-template-columns:1fr; }} .span-4,.span-6,.span-12 {{ grid-column:span 12; }} .param-grid {{ grid-template-columns:1fr; }} }}
   </style>
 </head>
 <body>
@@ -108,7 +105,7 @@ def page() -> str:
         <div class="mark">AY</div>
         <div>
           <h1>AIgoX_TTS_Studio</h1>
-          <div class="sub">目标声音 + 克隆文本，一键生成可下载音频</div>
+          <div class="sub">输入路径和参数后生成可下载音频</div>
         </div>
       </div>
       <div class="right-tools">
@@ -123,7 +120,7 @@ def page() -> str:
         <div class="module-head">
           <div>
             <h2 data-i18n="moduleTitle">声音克隆</h2>
-            <div class="module-desc" data-i18n="moduleDesc">选择模型、参考音色和克隆文本，生成可下载音频。</div>
+            <div class="module-desc" data-i18n="moduleDesc">所有路径都可以在下面直接修改。</div>
           </div>
           <div class="badge">Qwen3-TTS Base</div>
         </div>
@@ -135,7 +132,7 @@ def page() -> str:
           <div class="field span-6"><label data-i18n="textFile">克隆文本文件路径</label><input id="text_file" value="{F1_Clone.DEFAULT_CLONE_TEXT_FILE}"></div>
           <div class="field span-12"><label data-i18n="output">输出路径</label><input id="clone_output" value="{F1_Clone.DEFAULT_CLONE_OUTPUT}" data-placeholder-zh="留空自动输出到 output/clone_1/" data-placeholder-en="Auto output under output/clone_1/" placeholder="留空自动输出到 output/clone_1/"></div>
           <div class="field span-12"><label data-i18n="text">克隆内容</label><textarea id="clone_text" data-placeholder-zh="可直接输入文本；留空则读取上面的文本文件路径" data-placeholder-en="Type text here, or leave empty to read the text file path above" placeholder="可直接输入文本；留空则读取上面的文本文件路径"></textarea></div>
-          <div class="field span-12"><label data-i18n="refText">目标声音文本</label><input id="ref_text" value="{F1_Clone.DEFAULT_CLONE_REF_TEXT}"></div>
+          <div class="field span-12"><label data-i18n="refText">参考音频对应文本</label><input id="ref_text" value="{F1_Clone.DEFAULT_CLONE_REF_TEXT}"></div>
           <div class="field span-12 hint" data-i18n="mainHint">默认输入在 input，默认输出在 output。网页端可以直接修改模型路径、目标声音音频路径、文本文件路径和输出路径。</div>
         </div>
         <details>
@@ -171,15 +168,15 @@ def page() -> str:
     let uiLang = "zh";
     const dict = {{
       zh: {{
-        moduleTitle:"声音克隆", moduleDesc:"选择模型、参考音色和克隆文本，生成可下载音频。", model:"模型", modelPath:"模型路径", textFile:"克隆文本文件路径", language:"语言", output:"输出路径", text:"克隆内容",
-        refAudio:"目标声音音频", refText:"目标声音文本", params:"生成参数", run:"生成音频",
+        moduleTitle:"声音克隆", moduleDesc:"所有路径都可以在下面直接修改。", model:"模型", modelPath:"模型路径", textFile:"克隆文本文件路径", language:"语言", output:"输出路径", text:"克隆内容",
+        refAudio:"目标声音音频路径", refText:"参考音频对应文本", params:"生成参数", run:"生成音频",
         done:"生成完成", download:"下载音频", status:"运行状态", waiting:"等待运行...", running:"生成中...",
         mainHint:"默认输入在 input，默认输出在 output。网页端可以直接修改模型路径、目标声音音频路径、文本文件路径和输出路径。",
         backendHint:"当前可用后端：Qwen3-TTS Base。CustomVoice 和 VoiceDesign 不属于参考音频克隆链路。"
       }},
       en: {{
-        moduleTitle:"Voice Clone", moduleDesc:"Choose model, reference voice, and text, then generate downloadable audio.", model:"Model", modelPath:"Model Path", textFile:"Text File Path", language:"Language", output:"Output Path", text:"Text to Speak",
-        refAudio:"Reference Audio", refText:"Reference Text", params:"Generation Parameters", run:"Generate Audio",
+        moduleTitle:"Voice Clone", moduleDesc:"All paths can be edited below.", model:"Model", modelPath:"Model Path", textFile:"Text File Path", language:"Language", output:"Output Path", text:"Text to Speak",
+        refAudio:"Reference Audio Path", refText:"Reference Audio Transcript", params:"Generation Parameters", run:"Generate Audio",
         done:"Done", download:"Download Audio", status:"Run Status", waiting:"Waiting...", running:"Generating...",
         mainHint:"Default input stays under input, and output stays under output. You can edit model path, reference audio path, text file path, and output path in the web UI.",
         backendHint:"Available backend: Qwen3-TTS Base. CustomVoice and VoiceDesign are not reference-audio clone models."
