@@ -35,43 +35,70 @@ def page() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>TTS_Studio</title>
+  <title>AIgoX_TTS_Studio</title>
   <style>
-    :root {{ --bg:#f4f6f8; --panel:#ffffff; --ink:#182230; --muted:#667085; --line:#d9e0ea; --brand:#0f766e; --brand2:#2563eb; --soft:#ecfdf5; }}
+    :root {{
+      --bg:#0a0f16; --panel:#111923; --panel2:#0f1620; --ink:#e8eef6; --muted:#98a6b8;
+      --line:#263242; --brand:#18b6a4; --brand2:#4f8cff; --warn:#d9a441; --field:#0c131c;
+      --field2:#141f2b; --ok:#12352f;
+    }}
     * {{ box-sizing:border-box; }}
-    body {{ margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }}
-    header {{ border-bottom:1px solid var(--line); background:#fff; }}
-    .top {{ max-width:1180px; margin:0 auto; padding:18px 22px; display:flex; justify-content:space-between; align-items:center; gap:18px; }}
+    body {{
+      margin:0; min-height:100vh; color:var(--ink);
+      background:linear-gradient(135deg,#0a0f16 0%,#101923 48%,#0b1119 100%);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+    }}
+    body::before {{
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background:linear-gradient(90deg,rgba(24,182,164,.08),transparent 34%,rgba(79,140,255,.08));
+    }}
+    header {{ border-bottom:1px solid rgba(255,255,255,.08); background:rgba(10,15,22,.78); backdrop-filter:blur(18px); }}
+    .top {{ max-width:1180px; margin:0 auto; padding:18px 22px; display:flex; justify-content:space-between; align-items:center; gap:18px; position:relative; }}
     .brand {{ display:flex; align-items:center; gap:12px; min-width:0; }}
-    .mark {{ width:42px; height:42px; border-radius:8px; display:grid; place-items:center; color:#fff; font-weight:800; background:linear-gradient(135deg,var(--brand),var(--brand2)); }}
-    h1 {{ margin:0; font-size:21px; line-height:1.2; }}
+    .mark {{ width:44px; height:44px; border-radius:10px; display:grid; place-items:center; color:#061018; font-weight:900; background:linear-gradient(135deg,var(--brand),var(--brand2)); box-shadow:0 14px 34px rgba(24,182,164,.24); }}
+    h1 {{ margin:0; font-size:22px; line-height:1.2; letter-spacing:0; }}
     .sub {{ margin-top:4px; color:var(--muted); font-size:13px; }}
     .credit {{ color:var(--muted); font-size:13px; white-space:nowrap; }}
-    .lang-toggle {{ width:auto; margin:0; padding:8px 11px; background:#182230; font-size:13px; }}
+    .lang-toggle {{ width:auto; margin:0; padding:9px 12px; background:#172433; font-size:13px; border:1px solid #2c3b4d; }}
     .right-tools {{ display:flex; align-items:center; gap:12px; }}
-    main {{ max-width:1180px; margin:0 auto; padding:22px; display:grid; gap:14px; }}
-    .modules {{ display:grid; grid-template-columns:minmax(720px, 980px); gap:14px; align-items:start; justify-content:center; }}
-    section {{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:18px; }}
-    h2 {{ margin:0 0 14px; font-size:17px; }}
-    label {{ display:block; margin:12px 0 6px; font-weight:700; font-size:13px; color:#344054; }}
-    textarea,input,select {{ width:100%; border:1px solid #cfd6e2; border-radius:7px; padding:10px 11px; font:inherit; background:#fff; color:var(--ink); }}
-    textarea {{ min-height:126px; resize:vertical; line-height:1.55; }}
-    .grid {{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; align-items:end; }}
-    .grid.two {{ grid-template-columns:1.35fr 1fr; }}
-    .grid.three {{ grid-template-columns:repeat(3, minmax(0, 1fr)); }}
-    .span-all {{ grid-column:1 / -1; }}
-    .full {{ grid-column:1 / -1; }}
-    .hint {{ color:var(--muted); font-size:12px; margin-top:6px; }}
-    details {{ margin-top:14px; border:1px solid var(--line); border-radius:8px; background:#fbfcfe; padding:12px; }}
-    summary {{ cursor:pointer; font-weight:800; color:#344054; }}
-    .note {{ color:var(--muted); font-size:12px; line-height:1.45; margin-top:5px; }}
-    button {{ width:100%; margin-top:16px; padding:11px 14px; border:0; border-radius:7px; background:var(--brand); color:#fff; font-weight:700; cursor:pointer; }}
+    main {{ max-width:1180px; margin:0 auto; padding:26px 22px 34px; display:grid; gap:16px; position:relative; }}
+    .modules {{ display:grid; grid-template-columns:minmax(820px, 1060px); gap:16px; align-items:start; justify-content:center; }}
+    section {{ background:linear-gradient(180deg,rgba(17,25,35,.96),rgba(12,19,28,.98)); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:20px; box-shadow:0 24px 70px rgba(0,0,0,.34); }}
+    .module-head {{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:16px; }}
+    h2 {{ margin:0; font-size:18px; }}
+    .module-desc {{ margin-top:6px; color:var(--muted); font-size:13px; }}
+    .badge {{ padding:7px 10px; border:1px solid #315264; border-radius:999px; color:#9ee8dd; background:#0b2830; font-size:12px; white-space:nowrap; }}
+    .flow {{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }}
+    .flow div {{ border:1px solid var(--line); background:#0c141e; border-radius:10px; padding:10px 12px; color:#c8d3df; font-size:13px; }}
+    .flow b {{ display:block; color:var(--ink); font-size:12px; margin-bottom:3px; }}
+    label {{ display:block; margin:0 0 7px; font-weight:800; font-size:12px; color:#cbd6e2; }}
+    textarea,input,select {{
+      width:100%; height:42px; border:1px solid #2a384a; border-radius:9px; padding:10px 11px;
+      font:inherit; background:var(--field); color:var(--ink); outline:none;
+    }}
+    textarea:focus,input:focus,select:focus {{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(24,182,164,.14); }}
+    textarea {{ height:auto; min-height:132px; resize:vertical; line-height:1.55; }}
+    .grid {{ display:grid; grid-template-columns:repeat(12, minmax(0, 1fr)); gap:14px; align-items:start; }}
+    .field {{ min-width:0; }}
+    .span-12 {{ grid-column:span 12; }}
+    .span-6 {{ grid-column:span 6; }}
+    .span-4 {{ grid-column:span 4; }}
+    .hint {{ color:var(--muted); font-size:12px; line-height:1.5; }}
+    .inline-hint {{ align-self:end; min-height:42px; display:flex; align-items:center; padding:0 2px; }}
+    details {{ margin-top:16px; border:1px solid var(--line); border-radius:12px; background:#0d151f; overflow:hidden; }}
+    summary {{ cursor:pointer; font-weight:900; color:#dbe6f0; padding:13px 14px; background:#111c28; }}
+    .param-grid {{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; padding:14px; }}
+    .param-card {{ min-height:132px; border:1px solid #263242; border-radius:10px; padding:11px; background:#0b121b; }}
+    .note {{ color:var(--muted); font-size:12px; line-height:1.45; margin-top:7px; }}
+    button {{ width:100%; margin-top:16px; padding:12px 14px; border:0; border-radius:10px; background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#061018; font-weight:900; cursor:pointer; }}
     button:disabled {{ opacity:.65; cursor:wait; }}
-    .result {{ display:none; margin-top:14px; padding:12px; background:var(--soft); border:1px solid #bbf7d0; border-radius:8px; }}
-    .download {{ display:inline-block; margin-top:10px; padding:9px 12px; border-radius:7px; background:#182230; color:#fff; text-decoration:none; font-weight:700; }}
+    .result {{ display:none; margin-top:14px; padding:13px; background:var(--ok); border:1px solid #23695d; border-radius:10px; }}
+    .download {{ display:inline-block; margin-top:10px; padding:9px 12px; border-radius:9px; background:#d9a441; color:#14100a; text-decoration:none; font-weight:900; }}
     audio {{ width:100%; margin-top:10px; }}
-    pre {{ white-space:pre-wrap; min-height:120px; background:#101828; color:#dbeafe; border-radius:8px; padding:12px; overflow:auto; font-size:12px; }}
-    @media(max-width:900px) {{ .top {{ align-items:flex-start; flex-direction:column; }} .modules,.grid,.grid.two,.grid.three {{ grid-template-columns:1fr; }} }}
+    .status-wrap {{ margin-top:14px; border:1px solid var(--line); border-radius:12px; background:#090f16; overflow:hidden; }}
+    .status-title {{ padding:10px 12px; border-bottom:1px solid var(--line); color:#cbd6e2; font-weight:900; font-size:12px; }}
+    pre {{ margin:0; white-space:pre-wrap; min-height:126px; background:#090f16; color:#b8dcff; padding:12px; overflow:auto; font-size:12px; }}
+    @media(max-width:980px) {{ .top {{ align-items:flex-start; flex-direction:column; }} .modules,.flow {{ grid-template-columns:1fr; }} .span-4,.span-6,.span-12 {{ grid-column:span 12; }} .param-grid {{ grid-template-columns:1fr; }} }}
   </style>
 </head>
 <body>
@@ -80,7 +107,7 @@ def page() -> str:
       <div class="brand">
         <div class="mark">AY</div>
         <div>
-          <h1>TTS_Studio</h1>
+          <h1>AIgoX_TTS_Studio</h1>
           <div class="sub">目标声音 + 克隆文本，一键生成可下载音频</div>
         </div>
       </div>
@@ -93,29 +120,40 @@ def page() -> str:
   <main>
     <div class="modules">
       <section>
-        <h2 data-i18n="moduleTitle">声音克隆</h2>
+        <div class="module-head">
+          <div>
+            <h2 data-i18n="moduleTitle">声音克隆</h2>
+            <div class="module-desc" data-i18n="moduleDesc">选择模型、参考音色和克隆文本，生成可下载音频。</div>
+          </div>
+          <div class="badge">Qwen3-TTS Base</div>
+        </div>
+        <div class="flow">
+          <div><b data-i18n="flow1">目标声音</b><span data-i18n="flow1Text">上传或填写参考音频路径</span></div>
+          <div><b data-i18n="flow2">克隆文本</b><span data-i18n="flow2Text">输入要朗读的内容</span></div>
+          <div><b data-i18n="flow3">生成结果</b><span data-i18n="flow3Text">网页试听并直接下载</span></div>
+        </div>
         <div class="grid">
-          <div><label data-i18n="model">模型</label><select id="clone_model">{models}</select></div>
-          <div><label data-i18n="language">语言</label><select id="language"><option>Chinese</option><option>English</option><option>Japanese</option><option>Korean</option><option>French</option><option>German</option><option>Spanish</option><option>Russian</option><option>Portuguese</option><option>Italian</option></select></div>
-          <div><label data-i18n="output">输出路径</label><input id="clone_output" data-placeholder-zh="留空自动输出" data-placeholder-en="Auto output when empty" placeholder="留空自动输出"></div>
-          <div class="span-all"><label data-i18n="text">克隆内容</label><textarea id="clone_text">你好，这是默认声音克隆测试。</textarea></div>
-          <label data-i18n="refAudio">目标声音音频</label><input id="ref_audio" value="input/clone_1/ref.wav">
-          <label data-i18n="refText">目标声音文本</label><input id="ref_text" value="">
-          <div class="hint" data-i18n="mainHint">目标声音音频就是参考音色文件路径。目标声音文本是这段音频对应的文字，填写后克隆更稳。</div>
+          <div class="field span-4"><label data-i18n="model">模型</label><select id="clone_model">{models}</select></div>
+          <div class="field span-4"><label data-i18n="language">语言</label><select id="language"><option>Chinese</option><option>English</option><option>Japanese</option><option>Korean</option><option>French</option><option>German</option><option>Spanish</option><option>Russian</option><option>Portuguese</option><option>Italian</option></select></div>
+          <div class="field span-4"><label data-i18n="output">输出路径</label><input id="clone_output" data-placeholder-zh="留空自动输出" data-placeholder-en="Auto output when empty" placeholder="留空自动输出"></div>
+          <div class="field span-12"><label data-i18n="text">克隆内容</label><textarea id="clone_text">你好，这是默认声音克隆测试。</textarea></div>
+          <div class="field span-6"><label data-i18n="refAudio">目标声音音频</label><input id="ref_audio" value="input/clone_1/ref.wav"></div>
+          <div class="field span-6"><label data-i18n="refText">目标声音文本</label><input id="ref_text" value=""></div>
+          <div class="field span-12 hint" data-i18n="mainHint">目标声音音频就是参考音色文件路径。目标声音文本是这段音频对应的文字，填写后克隆更稳。</div>
         </div>
         <details>
           <summary data-i18n="params">生成参数</summary>
-          <div class="grid">
-            <div><label>分段长度</label><input id="max_chars" type="number" min="20" max="800" value="80"><div class="note">长文本按字数切段。默认 80，越大越容易占显存。</div></div>
-            <div><label>随机种子</label><input id="seed" type="number" placeholder="留空随机"><div class="note">固定后更容易复现相似结果，但 CUDA 不保证完全一致。</div></div>
-            <div><label>temperature</label><input id="temperature" type="number" step="0.05" min="0.1" max="2" value="0.9"><div class="note">控制随机性。越高变化越大，越低更稳定。</div></div>
-            <div><label>top_p</label><input id="top_p" type="number" step="0.05" min="0.1" max="1" value="1.0"><div class="note">核采样范围。降低会更保守。</div></div>
-            <div><label>top_k</label><input id="top_k" type="number" min="1" max="200" value="20"><div class="note">每步只从前 K 个候选采样。</div></div>
-            <div><label>repetition_penalty</label><input id="repetition_penalty" type="number" step="0.05" min="0.8" max="2" value="1.1"><div class="note">抑制重复。过高可能影响自然度。</div></div>
-            <div><label>max_new_tokens</label><input id="max_new_tokens" type="number" placeholder="留空默认"><div class="note">限制生成长度。通常留空。</div></div>
-            <div><label>do_sample</label><select id="do_sample"><option value="true">true</option><option value="false">false</option></select><div class="note">是否启用采样。true 更自然，false 更确定。</div></div>
-            <div><label>x_vector_only_mode</label><select id="x_vector_only_mode"><option value="false">false</option><option value="true">true</option></select><div class="note">true 只用声纹特征；false 会结合参考文本和音频上下文。</div></div>
-            <div><label>non_streaming_mode</label><select id="non_streaming_mode"><option value="false">false</option><option value="true">true</option></select><div class="note">Qwen 内部生成模式。默认 false。</div></div>
+          <div class="param-grid">
+            <div class="param-card"><label>分段长度</label><input id="max_chars" type="number" min="20" max="800" value="80"><div class="note">长文本按字数切段。默认 80，越大越容易占显存。</div></div>
+            <div class="param-card"><label>随机种子</label><input id="seed" type="number" placeholder="留空随机"><div class="note">固定后更容易复现相似结果，但 CUDA 不保证完全一致。</div></div>
+            <div class="param-card"><label>temperature</label><input id="temperature" type="number" step="0.05" min="0.1" max="2" value="0.9"><div class="note">控制随机性。越高变化越大，越低更稳定。</div></div>
+            <div class="param-card"><label>top_p</label><input id="top_p" type="number" step="0.05" min="0.1" max="1" value="1.0"><div class="note">核采样范围。降低会更保守。</div></div>
+            <div class="param-card"><label>top_k</label><input id="top_k" type="number" min="1" max="200" value="20"><div class="note">每步只从前 K 个候选采样。</div></div>
+            <div class="param-card"><label>repetition_penalty</label><input id="repetition_penalty" type="number" step="0.05" min="0.8" max="2" value="1.1"><div class="note">抑制重复。过高可能影响自然度。</div></div>
+            <div class="param-card"><label>max_new_tokens</label><input id="max_new_tokens" type="number" placeholder="留空默认"><div class="note">限制生成长度。通常留空。</div></div>
+            <div class="param-card"><label>do_sample</label><select id="do_sample"><option value="true">true</option><option value="false">false</option></select><div class="note">是否启用采样。true 更自然，false 更确定。</div></div>
+            <div class="param-card"><label>x_vector_only_mode</label><select id="x_vector_only_mode"><option value="false">false</option><option value="true">true</option></select><div class="note">true 只用声纹特征；false 会结合参考文本和音频上下文。</div></div>
+            <div class="param-card"><label>non_streaming_mode</label><select id="non_streaming_mode"><option value="false">false</option><option value="true">true</option></select><div class="note">Qwen 内部生成模式。默认 false。</div></div>
           </div>
         </details>
         <div class="hint" data-i18n="backendHint">当前可用后端：Qwen3-TTS Base。CustomVoice 和 VoiceDesign 不属于参考音频克隆链路。</div>
@@ -125,8 +163,10 @@ def page() -> str:
           <audio id="player" controls></audio>
           <a id="download" class="download" href="#" data-i18n="download">下载音频</a>
         </div>
-        <label data-i18n="status">运行状态</label>
-        <pre id="result">等待运行...</pre>
+        <div class="status-wrap">
+          <div class="status-title" data-i18n="status">运行状态</div>
+          <pre id="result">等待运行...</pre>
+        </div>
       </section>
     </div>
   </main>
@@ -134,14 +174,14 @@ def page() -> str:
     let uiLang = "zh";
     const dict = {{
       zh: {{
-        moduleTitle:"声音克隆", model:"模型", language:"语言", output:"输出路径", text:"克隆内容",
+        moduleTitle:"声音克隆", moduleDesc:"选择模型、参考音色和克隆文本，生成可下载音频。", flow1:"目标声音", flow1Text:"上传或填写参考音频路径", flow2:"克隆文本", flow2Text:"输入要朗读的内容", flow3:"生成结果", flow3Text:"网页试听并直接下载", model:"模型", language:"语言", output:"输出路径", text:"克隆内容",
         refAudio:"目标声音音频", refText:"目标声音文本", params:"生成参数", run:"生成音频",
         done:"生成完成", download:"下载音频", status:"运行状态", waiting:"等待运行...", running:"生成中...",
         mainHint:"目标声音音频就是参考音色文件路径。目标声音文本是这段音频对应的文字，填写后克隆更稳。",
         backendHint:"当前可用后端：Qwen3-TTS Base。CustomVoice 和 VoiceDesign 不属于参考音频克隆链路。"
       }},
       en: {{
-        moduleTitle:"Voice Clone", model:"Model", language:"Language", output:"Output Path", text:"Text to Speak",
+        moduleTitle:"Voice Clone", moduleDesc:"Choose model, reference voice, and text, then generate downloadable audio.", flow1:"Target Voice", flow1Text:"Use a reference audio path", flow2:"Clone Text", flow2Text:"Enter the content to speak", flow3:"Generated Audio", flow3Text:"Preview and download in browser", model:"Model", language:"Language", output:"Output Path", text:"Text to Speak",
         refAudio:"Reference Audio", refText:"Reference Text", params:"Generation Parameters", run:"Generate Audio",
         done:"Done", download:"Download Audio", status:"Run Status", waiting:"Waiting...", running:"Generating...",
         mainHint:"Reference audio is the target voice file. Reference text should match that audio for more stable cloning.",

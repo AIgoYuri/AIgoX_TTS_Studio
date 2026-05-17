@@ -1,14 +1,16 @@
-# TTS_Studio
+# AIgoX_TTS_Studio
 
 Open-source TTS application studio for practical voice cloning.
 
 Created by AIgoYuri.
 
+![AIgoX_TTS_Studio voice clone cover](assets/cover-voice-clone.png)
+
 中文 | [English](#english)
 
 ## 中文
 
-TTS_Studio 是一个准备开源的 TTS 实际应用项目。当前稳定主线只做一件事：
+AIgoX_TTS_Studio 是一个准备开源的 TTS 实际应用项目。当前稳定主线只做一件事：
 
 ```text
 目标声音音频 + 目标声音文本 + 要朗读的内容 -> 生成克隆音频
@@ -25,7 +27,7 @@ Qwen3-TTS Base
 ### 目录结构
 
 ```text
-TTS_Studio/
+AIgoX_TTS_Studio/
   README.md
   run.py                         # 总控网页入口；后续用于聚合 F1/F2/F3
   env/
@@ -180,6 +182,8 @@ http://127.0.0.1:9188
 中文/英文 UI 切换
 ```
 
+![AIgoX_TTS_Studio workflow](assets/cover-workflow.png)
+
 ### 5. F1 独立运行
 
 直接生成音频：
@@ -301,7 +305,7 @@ run.py           总控入口，后续聚合多个功能模块
 
 ## English
 
-TTS_Studio is an open-source TTS application studio for practical voice cloning.
+AIgoX_TTS_Studio is an open-source TTS application studio for practical voice cloning.
 
 Created by AIgoYuri.
 
@@ -322,7 +326,7 @@ Qwen3-TTS Base
 ### Project Layout
 
 ```text
-TTS_Studio/
+AIgoX_TTS_Studio/
   README.md
   run.py                         # Main web launcher; future hub for F1/F2/F3
   env/

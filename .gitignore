@@ -20,3 +20,7 @@ env/qwen3-audio/
 # Model weights are too large for git.
 models/*
 !models/download_qwen_tts_base.py
+
+# README assets
+!assets/
+!assets/*.png
