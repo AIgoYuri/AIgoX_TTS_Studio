@@ -120,7 +120,7 @@ def page() -> str:
         <div class="module-head">
           <div>
             <h2 data-i18n="moduleTitle">声音克隆</h2>
-            <div class="module-desc" data-i18n="moduleDesc">所有路径都可以在下面直接修改。</div>
+            <div class="module-desc" data-i18n="moduleDesc">填写目标声音和朗读内容即可克隆，也可以在参数里读取文本文件。</div>
           </div>
           <div class="badge">Qwen3-TTS Base</div>
         </div>
@@ -129,10 +129,10 @@ def page() -> str:
           <div class="field span-6"><label data-i18n="language">语言</label><select id="language"><option>Chinese</option><option>English</option><option>Japanese</option><option>Korean</option><option>French</option><option>German</option><option>Spanish</option><option>Russian</option><option>Portuguese</option><option>Italian</option></select></div>
           <div class="field span-12"><label data-i18n="modelPath">模型路径</label><input id="model_path" value="{F1_Clone.DEFAULT_CLONE_MODEL_PATH}"></div>
           <div class="field span-12"><label data-i18n="refAudio">目标声音音频路径</label><input id="ref_audio" value="{F1_Clone.DEFAULT_CLONE_REF_AUDIO}"></div>
+          <div class="field span-12"><label data-i18n="refText">参考音频对应文本</label><input id="ref_text" value="{F1_Clone.DEFAULT_CLONE_REF_TEXT}"></div>
           <div class="field span-12"><label data-i18n="output">输出路径</label><input id="clone_output" value="{F1_Clone.DEFAULT_CLONE_OUTPUT}" data-placeholder-zh="留空自动输出到 output/clone_1/" data-placeholder-en="Auto output under output/clone_1/" placeholder="留空自动输出到 output/clone_1/"></div>
           <div class="field span-12"><label data-i18n="text">克隆内容</label><textarea id="clone_text" data-placeholder-zh="输入要让目标声音朗读的文字" data-placeholder-en="Type the text to speak with the target voice" placeholder="输入要让目标声音朗读的文字"></textarea></div>
-          <div class="field span-12"><label data-i18n="refText">参考音频对应文本</label><input id="ref_text" value="{F1_Clone.DEFAULT_CLONE_REF_TEXT}"></div>
-          <div class="field span-12 hint" data-i18n="mainHint">默认输入在 input，默认输出在 output。网页端可以直接修改模型路径、目标声音音频路径和输出路径。</div>
+          <div class="field span-12 hint" data-i18n="mainHint">克隆内容可以直接手写；如果内容很长，也可以在生成参数里填写 txt 文件路径。</div>
         </div>
         <details>
           <summary data-i18n="params">生成参数</summary>
@@ -168,17 +168,17 @@ def page() -> str:
     let uiLang = "zh";
     const dict = {{
       zh: {{
-        moduleTitle:"声音克隆", moduleDesc:"填写目标声音音频和要朗读的内容即可生成。", model:"模型", modelPath:"模型路径", textFile:"可选读取文本文件", language:"语言", output:"输出路径", text:"克隆内容",
+        moduleTitle:"声音克隆", moduleDesc:"填写目标声音和朗读内容即可克隆，也可以在参数里读取文本文件。", model:"模型", modelPath:"模型路径", textFile:"可选读取文本文件", language:"语言", output:"输出路径", text:"克隆内容",
         refAudio:"目标声音音频路径", refText:"参考音频对应文本", params:"生成参数", run:"生成音频",
         done:"生成完成", download:"下载音频", status:"运行状态", waiting:"等待运行...", running:"生成中...",
-        mainHint:"默认输入在 input，默认输出在 output。网页端可以直接修改模型路径、目标声音音频路径和输出路径。",
+        mainHint:"克隆内容可以直接手写；如果内容很长，也可以在生成参数里填写 txt 文件路径。",
         backendHint:"当前可用后端：Qwen3-TTS Base。CustomVoice 和 VoiceDesign 不属于参考音频克隆链路。"
       }},
       en: {{
-        moduleTitle:"Voice Clone", moduleDesc:"Fill reference audio and text to generate speech.", model:"Model", modelPath:"Model Path", textFile:"Optional Text File", language:"Language", output:"Output Path", text:"Text to Speak",
+        moduleTitle:"Voice Clone", moduleDesc:"Fill reference voice and text to clone speech, or read a text file in parameters.", model:"Model", modelPath:"Model Path", textFile:"Optional Text File", language:"Language", output:"Output Path", text:"Text to Speak",
         refAudio:"Reference Audio Path", refText:"Reference Audio Transcript", params:"Generation Parameters", run:"Generate Audio",
         done:"Done", download:"Download Audio", status:"Run Status", waiting:"Waiting...", running:"Generating...",
-        mainHint:"Default input stays under input, and output stays under output. You can edit model path, reference audio path, and output path in the web UI.",
+        mainHint:"Type clone text directly, or set a txt file path in generation parameters for long content.",
         backendHint:"Available backend: Qwen3-TTS Base. CustomVoice and VoiceDesign are not reference-audio clone models."
       }}
     }};
