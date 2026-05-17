@@ -52,6 +52,7 @@ DEFAULT_CLONE_MAX_CHARS = 80
 #     --ref-audio input/clone_1/ref.wav \
 #     --ref-text "参考音频对应文本" \
 #     --model qwen3_tts_1_7b_base \
+#     --model-path models/Qwen/Qwen3-TTS-12Hz-1.7B-Base \
 #     --language Chinese \
 #     --output output/clone_1/demo.mp3 \
 #     --max-chars 80 \
@@ -70,7 +71,12 @@ def run(payload: dict[str, Any]) -> dict[str, Any]:
     """接收网页或命令行参数，调用 api.clone_tts 生成音频。"""
     # 模型名来自页面/命令行；没传就用顶部 DEFAULT_CLONE_MODEL。
     model = payload.get("model") or DEFAULT_CLONE_MODEL
-    if DEFAULT_CLONE_MODEL_PATH and model == DEFAULT_CLONE_MODEL and model in MODELS:
+
+    # 网页或命令行传了 model_path，就覆盖当前选择模型的路径。
+    model_path = payload.get("model_path")
+    if model_path and model in MODELS:
+        MODELS[model]["path"] = model_path
+    elif DEFAULT_CLONE_MODEL_PATH and model == DEFAULT_CLONE_MODEL and model in MODELS:
         MODELS[model]["path"] = DEFAULT_CLONE_MODEL_PATH
 
     # 输出路径没传就用顶部 DEFAULT_CLONE_OUTPUT；仍为空则自动生成。
@@ -82,9 +88,13 @@ def run(payload: dict[str, Any]) -> dict[str, Any]:
     # ref_text 是目标声音音频对应文字；可空，但填写更稳定。
     ref_text = payload.get("ref_text") or DEFAULT_CLONE_REF_TEXT
 
+    # 文本框有内容就用 text；文本框为空才读取 text_file。
+    text_file = payload.get("text_file")
+    text = payload.get("text") or (read_text(text_file) if text_file else DEFAULT_TEXT)
+
     # 这里只整理参数；真正加载模型和生成音频在 api.clone_tts。
     return clone_tts(
-        text=payload.get("text") or DEFAULT_TEXT,
+        text=text,
         ref_audio=ref_audio,
         ref_text=ref_text,
         model=model,
@@ -144,6 +154,7 @@ def main() -> None:
             "    --ref-audio input/clone_1/ref.wav \\\n"
             "    --ref-text \"参考音频对应文本\" \\\n"
             "    --model qwen3_tts_1_7b_base \\\n"
+            "    --model-path models/Qwen/Qwen3-TTS-12Hz-1.7B-Base \\\n"
             "    --language Chinese \\\n"
             "    --output output/clone_1/demo.mp3 \\\n"
             "    --max-chars 80 \\\n"
@@ -172,6 +183,7 @@ def main() -> None:
     parser.add_argument("--ref-audio", default=DEFAULT_CLONE_REF_AUDIO, help="目标声音音频路径，也就是要克隆的音色。")
     parser.add_argument("--ref-text", default=DEFAULT_CLONE_REF_TEXT, help="目标声音音频对应文本，建议填写。")
     parser.add_argument("--model", default=DEFAULT_CLONE_MODEL, help="模型名，默认 qwen3_tts_1_7b_base。")
+    parser.add_argument("--model-path", default=DEFAULT_CLONE_MODEL_PATH, help="模型路径；默认使用 models/ 下的相对路径。")
     parser.add_argument("--language", default=DEFAULT_CLONE_LANGUAGE, help="文本语言，例如 Chinese 或 English。")
     parser.add_argument("--output", default=DEFAULT_CLONE_OUTPUT, help="输出音频路径；留空则自动生成到 output/clone_1/。")
     parser.add_argument("--max-chars", type=int, default=DEFAULT_CLONE_MAX_CHARS, help="长文本分段长度，默认 80。")
@@ -203,6 +215,7 @@ def main() -> None:
         "ref_audio": args.ref_audio,
         "ref_text": args.ref_text,
         "model": args.model,
+        "model_path": args.model_path,
         "language": args.language,
         "output": args.output,
         "max_chars": args.max_chars,
